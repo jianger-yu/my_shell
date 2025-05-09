@@ -35,15 +35,12 @@ void sig_catch(int sig){
 
 int toexeclp(int hh){
     int ret = 0;
-    switch(hh){
-        case 0:ret = execlp(arr+expp[0],arr+expp[0],NULL); break;
-        case 1:ret = execlp(arr+expp[0],arr+expp[0],arr+expp[1],NULL); break;
-        case 2:ret = execlp(arr+expp[0],arr+expp[0],arr+expp[1],arr+expp[2],NULL); break;
-        case 3:ret = execlp(arr+expp[0],arr+expp[0],arr+expp[1],arr+expp[2],arr+expp[3],NULL); break;
-        case 4:ret = execlp(arr+expp[0],arr+expp[0],arr+expp[1],arr+expp[2],arr+expp[3],arr+expp[4],NULL); break;
-        case 5:ret = execlp(arr+expp[0],arr+expp[0],arr+expp[1],arr+expp[2],arr+expp[3],arr+expp[4],arr+expp[5],NULL); break;
-        case 6:ret = execlp(arr+expp[0],arr+expp[0],arr+expp[1],arr+expp[2],arr+expp[3],arr+expp[4],arr+expp[5],arr+expp[6],NULL); break;
-        }
+    char *argv[hh + 2];
+    for (int i = 0; i <= hh; i++) {
+        argv[i] = arr + expp[i];
+    }
+    argv[hh + 1] = NULL;
+    ret = execvp(argv[0], argv);
     if(ret == -1){
         printf("shell : command not found:%s",arr + expp[0]);
         for(int i = 1; i <= hh ;i++)
@@ -224,9 +221,9 @@ int main()
                         else strcpy(pa3,arr+r);
                         int fp;
                         if(arr[l]!=arr[l+1] && arr[l]=='>')//截断
-                            fp = open(pa3,O_RDWR|O_APPEND|O_TRUNC);
+                            fp = open(pa3,O_CREAT|O_RDWR|O_APPEND|O_TRUNC,0643);
                         else//追加
-                            fp = open(pa3,O_RDWR|O_APPEND);
+                            fp = open(pa3,O_CREAT|O_RDWR|O_APPEND,0643);
                         if(fp == -1) sys_err("open");
                         if(arr[l] == '<')  dup2(fp,STDIN_FILENO);
                         else dup2(fp,STDOUT_FILENO);
@@ -262,9 +259,9 @@ int main()
                         else strcpy(pa3,arr+r);
                         int fp;
                         if(arr[ll]!=arr[ll+1] && arr[ll]=='>')//截断
-                            fp = open(pa3,O_RDWR|O_APPEND|O_TRUNC);
+                            fp = open(pa3,O_CREAT|O_RDWR|O_APPEND|O_TRUNC,0643);
                         else//追加
-                            fp = open(pa3,O_RDWR|O_APPEND);
+                            fp = open(pa3,O_CREAT|O_RDWR|O_APPEND,0643);
                         if(fp == -1) sys_err("open");
                         if(arr[ll] == '<')  dup2(fp,STDIN_FILENO);
                         else dup2(fp,STDOUT_FILENO);
